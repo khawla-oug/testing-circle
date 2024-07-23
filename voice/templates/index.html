@@ -1,0 +1,202 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Blog Site</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css.css' %}">
+    <link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
+    
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  </head>
+  <body>
+    
+    <aside class="probootstrap-aside js-probootstrap-aside">
+      <a href="#" class="probootstrap-close-menu js-probootstrap-close-menu d-md-none">
+        <span class="oi oi-arrow-left"></span> Close</a>
+      <div class="probootstrap-site-logo probootstrap-animate" data-animate-effect="fadeInLeft">
+        
+        <a href="index.html" class="mb-2 d-block probootstrap-logo">OK WORLD</a>
+        <p class="mb-0">Embracing the Extraordinary in the Ordinary | Join me as we Paint the Canvas of Life with Words 🎨🖋️
+           <h2>OK WORLD</h2></p>
+      </div>
+      <div class="probootstrap-overflow">
+        <nav class="probootstrap-nav">
+          <ul>
+            <li class="probootstrap-animate active" data-animate-effect="fadeInLeft"><a href="{% url 'index' %}">Home</a></li>
+            <li class="probootstrap-animate" data-animate-effect="fadeInLeft"><a href="{% url 'about' %}">About Us</a></li>
+            <li class="probootstrap-animate" data-animate-effect="fadeInLeft"><a href="{% url 'services' %}">Services</a></li>
+            <li class="probootstrap-animate" data-animate-effect="fadeInLeft"><a href="{% url 'contact' %}">cONTACT ?</a></li>
+          </ul>
+        </nav>
+        <footer class="probootstrap-aside-footer probootstrap-animate" data-animate-effect="fadeInLeft">
+          <ul class="list-unstyled d-flex probootstrap-aside-social">
+            <li><a href="#" class="p-2"><span class="icon-twitter"></span></a></li>
+            <li><a href="#" class="p-2"><span class="icon-instagram"></span></a></li>
+            <li><a href="#" class="p-2"><span class="icon-dribbble"></span></a></li>
+          </ul>
+        </footer>
+      </div>
+    </aside>
+
+
+    <main role="main" class="probootstrap-main js-probootstrap-main">
+      <div class="probootstrap-bar">
+        <a href="#" class="probootstrap-toggle js-probootstrap-toggle"><span class="oi oi-menu"></span></a>
+        <div class="probootstrap-main-site-logo"><a href="{% url 'index' %}">Aside</a></a></div>
+      </div>
+      <div class="card-columns">
+        <div class="card">
+          <a href="{% url 'single' %}">
+          <img class="card-img-top probootstrap-animate" src="{% static 'images/alchemist.jpg' %}" alt="Card image cap">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_2.jpg' %}" alt="Card image cap">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/alchemist.jpg' %}" alt="Card image cap">
+            <h2>card title</h2>
+            <p>this is a peak of article</p>
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_4.jpg' %}" alt="Card image cap">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_5.jpg' %}" alt="Card image cap">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_6.jpg' %}" alt="Card image cap">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_7.jpg' %}" alt="Card image cap">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_8.jpg' %}" alt="Card image cap">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_9.jpg' %}" alt="Card image cap">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_10.jpg' %}" alt="Card image cap' %}">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_11.jpg' %}" alt="Card image cap">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_12.jpeg' %}" alt="Card image cap">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_13.jpg' %}" alt="Card image cap">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_14.jpeg' %}" alt="Card image cap">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_15.jpg' %}" alt="Card image cap">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_16.jpg' %}" alt="Card image cap">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_17.jpg' %}" alt="Card image cap">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_18.jpg' %}" alt="Card image cap">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_19.jpg' %}" alt="Card image cap">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_20.jpg' %}" alt="Card image cap">
+          </a>
+        </div>
+        <div class="card">
+          <a href="{% url 'single' %}">
+            <img class="card-img-top probootstrap-animate" src="{% static 'images/img_21.jpg' %}" alt="Card image cap">
+          </a>
+        </div>
+      </div>  
+
+      <div class="container-fluid d-md-none">
+        <div class="row">
+          <div class="col-md-12">
+            <ul class="list-unstyled d-flex probootstrap-aside-social">
+              <li><a href="#" class="p-2"><span class="icon-twitter"></span></a></li>
+              <li><a href="#" class="p-2"><span class="icon-instagram"></span></a></li>
+              <li><a href="#" class="p-2"><span class="icon-dribbble"></span></a></li>
+            </ul>
+            <p>&copy; 2023 
+              <a href="#" target="_blank">uiCookies:Aside</a>. 
+              <br> All Rights Reserved. Designed by me<a href="#" target="_blank">My blog</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'js/imagesloaded.pkgd.min.js' %}"></script>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    
+  </body>
+</html>

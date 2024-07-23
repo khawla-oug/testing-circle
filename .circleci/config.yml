@@ -31,7 +31,9 @@ jobs:
           name: Build and Package
           command: |
             echo "$DOCKER_PASSWORD" | docker login khawla2.azurecr.io -u "$DOCKER_USERNAME" --password-stdin
-            docker push khawla2.azurecr.io/circleci-test:latest
+            docker tag myapp:latest khawla2.azurecr.io/myapp:latest
+            docker push khawla2.azurecr.io/myapp:latest
+
 
   deploy:
     machine:

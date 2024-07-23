@@ -1,48 +1,88 @@
 version: 2.1
 
-executors:
-  default:
-    docker:
-      - image: circleci/python:3.8
+orbs:
+  kubernetes: circleci/kubernetes@0.11.2
 
 jobs:
-  build-and-deploy:
-    docker:
-      - image: circleci/node:14
+  build:
+    machine:
+      image: ubuntu-2204:2022.04.2
     steps:
-      - checkout
-      - setup_remote_docker:
-          version: 20.10.7
+      - checkout # Checkout the source code
+
+      - run:
+          name: Install JDK 17
+          command: |
+            sudo apt update
+            sudo apt install -y openjdk-17-jdk
+
+      - run:
+          name: Install Maven
+          command: |
+            sudo apt install -y maven
+
+      - run:
+          name: Install Docker
+          command: |
+            sudo apt-get update
+            sudo apt-get install ca-certificates curl
+            sudo install -m 0755 -d /etc/apt/keyrings
+            sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+            sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+            # Add the repository to Apt sources
+            echo \
+              "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+              $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+              sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            sudo apt-get update
+            sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+      - run:
+          name: Run Tests
+          command: mvn test 
+
+      - run:
+          name: Build and Push Docker Image
+          command: |
+            mvn spring-boot:build-image -DskipTests 
+            echo "$DOCKER_PASSWORD" | docker login khawla2.azurecr.io -u "$DOCKER_USERNAME" --password-stdin
+            docker tag myapp:latest khawla2.azurecr.io/myapp:latest
+            docker push khawla2.azurecr.io/myapp:latest
+
+  deploy:
+    machine:
+      image: ubuntu-2004:202201-01 # Use Ubuntu 20.04 LTS image
+    steps:
+      - checkout # Checkout the source code
+
+      - kubernetes/install-kubectl
+
       - run:
           name: Install Azure CLI
           command: |
+            sudo apt update
+            sudo apt install -y curl apt-transport-https lsb-release gnupg
             curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
       - run:
-          name: Install kubectl
-          command: |
-            az aks install-cli
-      - run:
-          name: Login to Azure
+          name: Deploy to AKS
           command: |
             az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
-      - run:
-          name: Build Docker Image
-          command: |
-            docker build -t myapp:${CIRCLE_SHA1} .
-      - run:
-          name: Push Docker Image to ACR
-          command: |
-            docker login $AZURE_REGISTRY -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET
-            docker tag myapp:${CIRCLE_SHA1} $AZURE_REGISTRY/myapp:${CIRCLE_SHA1}
-            docker push $AZURE_REGISTRY/myapp:${CIRCLE_SHA1}
-      - run:
-          name: AKS Deployment
-          command: |
-            az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
-            kubectl apply -f deployment.yaml
+            az account set --subscription $AZURE_SUBSCRIPTION_ID
+            az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER_NAME
+            kubectl apply -f ./k8s/deployment.yaml  # Apply your Kubernetes deployment configuration
+            kubectl apply -f ./k8s/service.yaml  # Apply your Kubernetes service configuration
 
 workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - build-and-deploy
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - main # Adjust branch as needed

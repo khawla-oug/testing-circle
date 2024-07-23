@@ -1,0 +1,92 @@
+version: 2.1
+orbs:
+  kubernetes: circleci/kubernetes@0.11.2
+jobs:
+  build:
+    machine:
+      image: ubuntu-2204:2022.04.2
+    steps:
+      - checkout # Checkout the source code
+      - run:
+          name: Install JDK 17
+          command: |
+            sudo apt update
+            sudo apt install -y openjdk-17-jdk
+
+      # Add commands to install Maven
+      - run:
+          name: Install Maven
+          command: |
+            sudo apt install -y maven
+    
+      # Add commands to install Docker
+      - run:
+          name: Install Docker
+          command: |
+            sudo apt-get update
+            sudo apt-get install ca-certificates curl
+            sudo install -m 0755 -d /etc/apt/keyrings
+            sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+            sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+            # Add the repository to Apt sources:
+            echo \
+              "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+              $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+              sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            sudo apt-get update
+            sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+      - run:
+          name: Run Tests
+          command: mvn test 
+      # Continue with the existing steps
+      - run:
+          name: Build and Package
+          command: |
+            mvn spring-boot:build-image -DskipTests 
+            echo "$DOCKER_PASSWORD" | docker login lyounsi.azurecr.io -u "$DOCKER_USERNAME" --password-stdin
+            docker push lyounsi.azurecr.io/circleci-shop:latest
+
+  deploy:
+    machine:
+      image: ubuntu-2004:202201-01 # Use Ubuntu 20.04 LTS image
+    steps:
+      - checkout # Checkout the source code
+      - kubernetes/install-kubectl
+      - run:
+          name: Install Azure CLI and kubectl
+          command: |
+            # Install prerequisites
+            sudo apt update
+            sudo apt install -y curl apt-transport-https lsb-release gnupg
+            
+            # Install Azure CLI
+            curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+            
+            # Install kubectl
+            # curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes.gpg
+            # echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/kubernetes.gpg] http://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list
+            # sudo apt update && sudo apt install -y kubectl
+      - run:
+          name: Deploy to AKS
+          command: |
+            az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
+            az account set --subscription 2eb2c0f6-beab-4ff2-b4dc-ffa7f6b8e716
+            az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER_NAME
+            kubectl apply -f ./k8s/deployment.yaml  # Apply your Kubernetes deployment configuration
+            kubectl apply -f ./k8s/service.yaml  # Apply your Kubernetes service configuration
+
+
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - main # Adjust branch as needed

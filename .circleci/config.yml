@@ -8,7 +8,7 @@ jobs:
     machine:
       image: ubuntu-2204:2022.04.2
     steps:
-      - checkout # Checkout the source code
+      - checkout # Checkout the source code #test
 
       - run:
           name: Install Docker

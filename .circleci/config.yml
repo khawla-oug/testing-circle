@@ -52,7 +52,7 @@ jobs:
           command: |
             mvn spring-boot:build-image -DskipTests 
             echo "$DOCKER_PASSWORD" | docker login khawla2.azurecr.io -u "$DOCKER_USERNAME" --password-stdin
-            docker push khawla2.azurecr.io/circleci-test:latest
+            docker push khawla2.azurecr.io/circlecitest:latest
 
 
   deploy:

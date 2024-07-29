@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: circleci-test-deployment
+  name: circlecitest-deployment
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: circleci-test
+      app: circlecitest
   template:
     metadata:
       labels:
@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: circleci-test
-        image: khawla2.azurecr.io/circleci-test:latest
+        image: khawla2.azurecr.io/circlecitest:latest
         ports:
         - containerPort: 80

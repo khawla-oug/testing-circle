@@ -44,24 +44,20 @@ jobs:
             sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
       - run:
-          name: Build JAR File
-          command: mvn clean package -DskipTests
+          name: Run Tests
+          command: mvn test 
 
       - run:
           name: Verify Docker Installation
           command: docker --version
 
       - run:
-          name: Build Docker Image
+          name: Build and Package
           command: |
-            docker build -t circleci-test:latest .
-
-      - run:
-          name: Push Docker Image to Azure Container Registry
-          command: |
+            mvn spring-boot:build-image -DskipTests 
             echo "$DOCKER_PASSWORD" | docker login khawla2.azurecr.io -u "$DOCKER_USERNAME" --password-stdin
-            docker tag circleci-test:latest khawla2.azurecr.io/circleci-test:latest
             docker push khawla2.azurecr.io/circleci-test:latest
+
 
   deploy:
     machine:

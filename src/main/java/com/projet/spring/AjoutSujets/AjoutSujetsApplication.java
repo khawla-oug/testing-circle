@@ -15,15 +15,6 @@ public class AjoutSujetsApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AjoutSujetsApplication.class, args);
 	}
-	@Bean
-	public CorsFilter corsFilter() {
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		CorsConfiguration config = new CorsConfiguration();
-		config.applyPermitDefaultValues();
-		config.addAllowedOrigin("*");
-		config.addAllowedMethod("DELETE");
-		source.registerCorsConfiguration("/**", config);
-		return new CorsFilter();
-	}
+	
 
 }

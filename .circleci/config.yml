@@ -1,29 +1,37 @@
 version: 2.1
+
 orbs:
   kubernetes: circleci/kubernetes@0.11.2
+
 jobs:
   build:
     machine:
       image: ubuntu-2204:2022.04.2
     steps:
-      - checkout # Checkout the source code #test
+      - checkout # Checkout the source code
+
       - run:
           name: Install JDK 17
           command: |
             sudo apt update
             sudo apt install -y openjdk-17-jdk
-      # Add commands to install Maven
+
       - run:
           name: Install Maven
           command: |
             sudo apt install -y maven
+
       - run:
           name: Install Docker
           command: |
             sudo apt-get update
-            sudo apt-get install ca-certificates curl
+            sudo apt-get install -y \
+              ca-certificates \
+              curl \
+              software-properties-common
+
             sudo install -m 0755 -d /etc/apt/keyrings
-            sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.asc
             sudo chmod a+r /etc/apt/keyrings/docker.asc
 
             # Add Docker repository
@@ -31,28 +39,26 @@ jobs:
               "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
               $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
               sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+              
             sudo apt-get update
-            sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+            sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-       - run:
+      - run:
           name: Build JAR File
           command: mvn clean package -DskipTests
 
-       - run:
+      - run:
           name: Verify Docker Installation
           command: docker --version
 
-         # Build Docker Image
       - run:
           name: Build Docker Image
           command: |
             docker build -t circleci-test:latest .
 
-#Build and package
       - run:
           name: Push Docker Image to Azure Container Registry
           command: |
-
             echo "$DOCKER_PASSWORD" | docker login khawla2.azurecr.io -u "$DOCKER_USERNAME" --password-stdin
             docker tag circleci-test:latest khawla2.azurecr.io/circleci-test:latest
             docker push khawla2.azurecr.io/circleci-test:latest

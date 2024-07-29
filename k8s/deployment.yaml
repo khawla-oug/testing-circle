@@ -13,7 +13,7 @@ spec:
         app: circleci-test
     spec:
       containers:
-      - name: circleci-test
+      - name: circlecitest
         image: khawla2.azurecr.io/circlecitest:latest
         ports:
         - containerPort: 80

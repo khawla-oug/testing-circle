@@ -68,15 +68,22 @@ jobs:
             sudo apt update
             sudo apt install -y curl apt-transport-https lsb-release gnupg
             curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+      
+      - run:
+          name: Check Azure Account and Resource Group
+          command: |
+            az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
+            az account set --subscription $AZURE_SUBSCRIPTION_ID
+            az account show --output table
+            az group show --name $RESOURCE_GROUP --output table || echo "Resource group not found"
+            az aks show --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER_NAME --output table || echo "AKS cluster not found"
 
       - run:
           name: Deploy to AKS
           command: |
-            az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
-            az account set --subscription $AZURE_SUBSCRIPTION_ID
-            az aks get-credentials --resource-group testG2 --name $AKS_CLUSTER_NAME
-            kubectl apply -f ./k8s/deployment.yaml  # Apply your Kubernetes deployment configuration
-            kubectl apply -f ./k8s/service.yaml  # Apply your Kubernetes service configuration
+            az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER_NAME
+            kubectl apply -f ./k8s/deployment.yaml
+            kubectl apply -f ./k8s/service.yaml
 
 workflows:
   version: 2

@@ -75,8 +75,8 @@ jobs:
             az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
             az account set --subscription $AZURE_SUBSCRIPTION_ID
             az account show --output table
-            az group show --name circleAKS --output table || echo "Resource group not found"
-            az aks show --resource-group circleAKS --name $AKS_CLUSTER_NAME --output table || echo "AKS cluster not found"
+            az group show --name $RESOURCE_GROUP --output table || echo "Resource group not found"
+            az aks show --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER_NAME --output table || echo "AKS cluster not found"
 
       - run:
           name: Deploy to AKS

@@ -60,9 +60,8 @@ jobs:
       image: ubuntu-2004:202201-01 # Use Ubuntu 20.04 LTS image
     steps:
       - checkout # Checkout the source code
-
       - kubernetes/install-kubectl
-
+      
       - run:
           name: Install Azure CLI
           command: |

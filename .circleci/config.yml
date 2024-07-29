@@ -43,6 +43,9 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
+      - run:
+          name: Build JAR File
+          command: mvn clean package -DskipTests
 
       - run:
           name: Verify Docker Installation
@@ -51,7 +54,7 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            docker build -t circleci-test .
+            docker build -t circleci-test:latest .
 
       - run:
           name: Push Docker Image to Azure Container Registry

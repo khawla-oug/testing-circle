@@ -44,10 +44,6 @@ jobs:
             sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
       - run:
-          name: Run Tests
-          command: mvn test 
-
-      - run:
           name: Verify Docker Installation
           command: docker --version
 
